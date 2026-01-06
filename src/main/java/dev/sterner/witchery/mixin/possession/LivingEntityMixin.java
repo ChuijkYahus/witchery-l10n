@@ -59,8 +59,8 @@ public abstract class LivingEntityMixin extends Entity {
     @ModifyVariable(method = "dropAllDeathLoot", at = @At(value = "HEAD"), argsOnly = true)
     private DamageSource witchery$dropAllDeathLoot(DamageSource deathCause) {
         Player possessor = null;
-        if (deathCause.getEntity() != null) {
-            possessor = ((Possessable) deathCause.getEntity()).getPossessor();
+        if (deathCause.getEntity() instanceof Possessable possessable) {
+            possessor = possessable.getPossessor();
         }
         if (possessor != null) {
             this.lastHurtByPlayerTime = 100;
