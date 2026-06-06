@@ -96,8 +96,38 @@ import net.neoforged.neoforge.event.village.VillagerTradesEvent
 object WitcheryNeoForgeEvents {
 
     @SubscribeEvent
-    fun onPotionEffectApplied(event: MobEffectEvent.Added) {
-        //HunterArmorDefenseHandler.onPotionEffectApplied(event)
+    fun onPotionEffectApplied(event: MobEffectEvent.Applicable) {
+        val effect = event.effectInstance
+        val entity = event.entity
+        if (effect != null && entity is Player) {
+            if (effect.effect.`is`(WitcheryTags.STATUS_EFFECT_BLACKLIST_LICH)) {
+                val bl = AfflictionPlayerAttachment.getData(entity).getLichLevel() > 0
+                if (bl) {
+                    event.result = MobEffectEvent.Applicable.Result.DO_NOT_APPLY
+                }
+            }
+
+            val bl = AfflictionPlayerAttachment.getData(entity).isSoulForm()
+            if (bl) {
+                if (!effect.effect.`is`(WitcheryTags.STATUS_EFFECT_WHITELIST_SOUL_FORM)) {
+                    event.result = MobEffectEvent.Applicable.Result.DO_NOT_APPLY
+                }
+            }
+
+            if (effect.effect.`is`(WitcheryTags.STATUS_EFFECT_BLACKLIST_VAMPIRE)) {
+                val bl = AfflictionPlayerAttachment.getData(entity).getVampireLevel() > 0
+                if (bl) {
+                    event.result = MobEffectEvent.Applicable.Result.DO_NOT_APPLY
+                }
+            }
+
+            if (effect.effect.`is`(WitcheryTags.STATUS_EFFECT_BLACKLIST_WEREWOLF)) {
+                val bl = AfflictionPlayerAttachment.getData(entity).getWerewolfLevel() > 0
+                if (bl) {
+                    event.result = MobEffectEvent.Applicable.Result.DO_NOT_APPLY
+                }
+            }
+        }
     }
 
     @SubscribeEvent

@@ -63,7 +63,7 @@ class PhylacteryBlockEntity(
                     )
 
                     pPlayer.displayClientMessage(
-                        Component.literal("Soul bound to phylactery."),
+                        Component.translatable("witchery.phylactery.bound"),
                         true
                     )
                 }
@@ -107,9 +107,8 @@ class PhylacteryBlockEntity(
 
             if (existing.size >= maxSouls) {
                 level.destroyBlock(blockPos, true, pPlacer)
-                pPlacer.displayClientMessage(
-                    Component.literal("You cannot bind more phylacteries."),
-                    true
+                pPlacer.sendSystemMessage(
+                    Component.translatable("witchery.phylactery.cannot"), true
                 )
                 return
             }

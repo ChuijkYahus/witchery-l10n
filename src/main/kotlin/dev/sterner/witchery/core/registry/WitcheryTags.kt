@@ -73,5 +73,8 @@ object WitcheryTags {
 
     val EMPTY_FLUID = TagKey.create(Registries.FLUID, Witchery.id("empty"))
 
-
+    val STATUS_EFFECT_BLACKLIST_LICH = TagKey.create(Registries.MOB_EFFECT, Witchery.id("status_effect_blacklist_lich"))
+    val STATUS_EFFECT_WHITELIST_SOUL_FORM = TagKey.create(Registries.MOB_EFFECT, Witchery.id("status_effect_whitelist_soul_form"))
+    val STATUS_EFFECT_BLACKLIST_VAMPIRE = TagKey.create(Registries.MOB_EFFECT, Witchery.id("status_effect_blacklist_vampire"))
+    val STATUS_EFFECT_BLACKLIST_WEREWOLF = TagKey.create(Registries.MOB_EFFECT, Witchery.id("status_effect_blacklist_werewolf"))
 }

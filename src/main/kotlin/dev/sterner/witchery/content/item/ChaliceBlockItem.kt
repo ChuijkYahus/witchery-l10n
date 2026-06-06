@@ -18,7 +18,7 @@ class ChaliceBlockItem(block: Block, properties: Properties) : BlockItem(block, 
         tooltipFlag: TooltipFlag
     ) {
         if (stack.get(WitcheryDataComponents.HAS_SOUP.get()) == true)
-            tooltipComponents.add(Component.literal("Filled").withColor(0xFF0000))
+            tooltipComponents.add(Component.translatable("witchery.chalice.filled").withColor(0xFF0000))
 
         super.appendHoverText(stack, context, tooltipComponents, tooltipFlag)
     }

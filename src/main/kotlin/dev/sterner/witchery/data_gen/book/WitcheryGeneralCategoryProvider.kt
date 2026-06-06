@@ -33,9 +33,9 @@ class WitcheryGeneralCategoryProvider(
             "____________2_1____w____g_________",
             "_____________________e_u__________",
             "____________a___b__o______________",
-            "__________________x_h_____________",
+            "__________________x__h____________",
             "________________d_________________",
-            "__________________________________",
+            "____________________¥_____________",
             "__________________t_______________",
             "__________________________________",
             "__________________________________",
@@ -53,6 +53,9 @@ class WitcheryGeneralCategoryProvider(
 
         val beginning = EntryProviders.single(this, "beginning", WitcheryItems.GUIDEBOOK.get()).generate("b")
         addEntry(beginning)
+
+
+
 
         val tagLock = EntryProviders.singleItemTwoPages(this, "tag_lock", WitcheryItems.TAGLOCK.get().defaultInstance).generate("1")
             .requiresAndFollows(beginning)
@@ -73,6 +76,13 @@ class WitcheryGeneralCategoryProvider(
         val oven = OvenEntryProvider(this).generate("o")
             .requiresAndFollows(beginning)
         addEntry(oven)
+
+        val altar =
+            AltarEntryProvider(this).generate("¥")
+                .requiresAndFollows(
+                    oven
+                )
+        addEntry(altar)
 
         val cauldron = EntryProviders.doubleItem(
             this,

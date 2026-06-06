@@ -11,12 +11,12 @@
       }
     ]
   },
-  "description": "book.witchery.guidebook.general.fume_expansion.description",
+  "description": "book.witchery.guidebook.general.altar.description",
   "hide_while_locked": false,
   "icon": {
-    "item": "witchery:iron_witches_oven_fume_extension"
+    "item": "witchery:deepslate_altar_block"
   },
-  "name": "book.witchery.guidebook.general.fume_expansion.name",
+  "name": "book.witchery.guidebook.general.altar.name",
   "pages": [
     {
       "type": "modonomicon:spotlight",
@@ -26,10 +26,10 @@
       },
       "item": {
         "count": 1,
-        "item": "witchery:iron_witches_oven_fume_extension"
+        "item": "witchery:deepslate_altar_block"
       },
-      "text": "general.fume_expansion.page.1",
-      "title": "general.fume_expansion.title.1"
+      "text": "general.altar.page.1",
+      "title": "general.altar.title.1"
     },
     {
       "type": "modonomicon:crafting_recipe",
@@ -37,21 +37,21 @@
       "condition": {
         "type": "modonomicon:none"
       },
-      "recipe_id_1": "witchery:iron_witches_oven_fume_extension",
-      "text": "general.fume_expansion.title.1",
-      "title1": "general.fume_expansion",
+      "recipe_id_1": "witchery:deepslate_altar_block",
+      "text": "general.altar.title.2",
+      "title1": "general.altar",
       "title2": ""
     },
     {
-      "type": "modonomicon:crafting_recipe",
+      "type": "modonomicon:text",
       "anchor": "",
       "condition": {
         "type": "modonomicon:none"
       },
-      "recipe_id_1": "witchery:copper_witches_oven_fume_extension",
-      "text": "general.fume_expansion.title.1",
-      "title1": "general.fume_expansion",
-      "title2": ""
+      "show_title_separator": true,
+      "text": "general.altar.modifiers.1",
+      "title": "",
+      "use_markdown_in_title": false
     }
   ],
   "parents": [
@@ -63,7 +63,7 @@
     }
   ],
   "show_when_any_parent_unlocked": false,
-  "sort_number": 21,
-  "x": 6,
-  "y": -1
+  "sort_number": 5,
+  "x": 3,
+  "y": 3
 }

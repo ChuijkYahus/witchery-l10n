@@ -13,7 +13,7 @@ import net.minecraft.client.renderer.RenderType
 import net.minecraft.network.chat.Component
 import net.minecraft.util.Mth
 
-class HudEditorScreen : Screen(Component.literal("HUD Editor")) {
+class HudEditorScreen : Screen(Component.translatable("witchery.hud_editor")) {
 
     private var draggedElement: HudElement? = null
     private var dragOffsetX = 0
@@ -34,7 +34,7 @@ class HudEditorScreen : Screen(Component.literal("HUD Editor")) {
         var y: Int,
         var width: Int,
         var height: Int,
-        var label: String
+        var label: Component
     )
 
     override fun init() {
@@ -53,7 +53,7 @@ class HudEditorScreen : Screen(Component.literal("HUD Editor")) {
                 infusionY - 4,
                 23,
                 55,
-                "Infusion Meter"
+                Component.translatable("witchery.hud_editor.infusion")
             )
         )
 
@@ -65,7 +65,7 @@ class HudEditorScreen : Screen(Component.literal("HUD Editor")) {
                 manifestationY - 4,
                 20,
                 32,
-                "Manifestation Meter"
+                Component.translatable("witchery.hud_editor.manifestation")
             )
         )
 
@@ -77,7 +77,7 @@ class HudEditorScreen : Screen(Component.literal("HUD Editor")) {
                 barkY - 4,
                 88,
                 16,
-                "Bark Belt"
+                Component.translatable("witchery.hud_editor.bark_bet")
             )
         )
 
@@ -89,12 +89,12 @@ class HudEditorScreen : Screen(Component.literal("HUD Editor")) {
                 questY - 4,
                 64,
                 64,
-                "Quests"
+                Component.translatable("witchery.hud_editor.quests")
             )
         )
 
         addRenderableWidget(
-            Button.builder(Component.literal("Reset Positions")) { _ ->
+            Button.builder(Component.translatable("witchery.hud_editor.reset")) { _ ->
                 resetPositions()
             }
                 .bounds(width / 2 - 75, height - 30, 150, 20)

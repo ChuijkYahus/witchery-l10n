@@ -49,7 +49,7 @@ public class BookParentNodeScreenMixin {
                 witcheryButtonX,
                 witcheryButtonY,
                 (button) -> this.witchery$onWitcheryAdvancementButtonClick(),
-                Tooltip.create(Component.literal("Grant all Witchery advancements"))
+                Tooltip.create(Component.translatable("witchery.book.grant_all"))
         );
 
         ((ScreenAccessor) self).witchery$addRenderableWidget(witcheryAdvancementButton);

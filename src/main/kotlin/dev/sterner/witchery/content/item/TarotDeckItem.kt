@@ -27,7 +27,7 @@ class TarotDeckItem(properties: Properties) : Item(properties) {
                     PacketDistributor.sendToPlayer(player, OpenTarotScreenS2CPayload())
                 } else {
                     player.displayClientMessage(
-                        Component.literal("Your fortune this week has already been decided.")
+                        Component.translatable("witchery.tarot.already")
                             .withStyle(ChatFormatting.DARK_PURPLE, ChatFormatting.ITALIC),
                         true
                     )
@@ -35,7 +35,7 @@ class TarotDeckItem(properties: Properties) : Item(properties) {
                 }
             } else {
                 player.displayClientMessage(
-                    Component.literal("You don't know how to use this.")
+                    Component.translatable("witchery.tarot.dont_know")
                         .withStyle(ChatFormatting.DARK_PURPLE, ChatFormatting.ITALIC),
                     true
                 )
@@ -57,7 +57,7 @@ class TarotDeckItem(properties: Properties) : Item(properties) {
         )
 
         tooltipComponents.add(
-            Component.literal("Draw 3 cards from the Major Arcana")
+            Component.translatable("witchery.tarot.draw_3")
                 .withStyle(ChatFormatting.DARK_PURPLE)
         )
 

@@ -48,7 +48,7 @@ object QuestHudRenderer {
 
     data class QuestState(
         val id: String,
-        val description: String,
+        val description: Component,
         val current: Int,
         val max: Int,
         val isComplete: Boolean
@@ -196,7 +196,7 @@ object QuestHudRenderer {
         if (levelsToRender.first > 0) {
             yOffset = renderAfflictionQuests(
                 guiGraphics, font, baseX, yOffset,
-                "Lycanthropy", AfflictionTypes.LYCANTHROPY,
+                Component.translatable("witchery.quest.lycanthropy"), AfflictionTypes.LYCANTHROPY,
                 levelsToRender.first, alpha, player
             )
             yOffset += 10
@@ -205,7 +205,7 @@ object QuestHudRenderer {
         if (levelsToRender.second > 0) {
             yOffset = renderAfflictionQuests(
                 guiGraphics, font, baseX, yOffset,
-                "Vampirism", AfflictionTypes.VAMPIRISM,
+                Component.translatable("witchery.quest.vampirism"), AfflictionTypes.VAMPIRISM,
                 levelsToRender.second, alpha, player
             )
             yOffset += 10
@@ -214,7 +214,7 @@ object QuestHudRenderer {
         if (levelsToRender.third > 0) {
             yOffset = renderAfflictionQuests(
                 guiGraphics, font, baseX, yOffset,
-                "Lichdom", AfflictionTypes.LICHDOM,
+                Component.translatable("witchery.quest.lichdom"), AfflictionTypes.LICHDOM,
                 levelsToRender.third, alpha, player
             )
         }
@@ -238,7 +238,7 @@ object QuestHudRenderer {
         font: Font,
         x: Int,
         startY: Int,
-        title: String,
+        title: Component,
         type: AfflictionTypes,
         level: Int,
         alpha: Int,
@@ -248,7 +248,7 @@ object QuestHudRenderer {
 
         val quests = getQuestsForAffliction(type, level, player)
 
-        var maxTextWidth = font.width(Component.literal(title))
+        var maxTextWidth = font.width(title)
         quests.forEach { quest ->
             val displayQuest = if (levelUpDisplayTimer > 0) {
                 quest.copy(current = quest.max, isComplete = true)
@@ -277,7 +277,7 @@ object QuestHudRenderer {
         )
 
         // Draw title
-        val titleComponent = Component.literal(title)
+        val titleComponent = title
         val titleWidth = font.width(titleComponent) / 2
         guiGraphics.drawString(
             font, titleComponent,
@@ -349,9 +349,11 @@ object QuestHudRenderer {
 
     private fun buildQuestText(quest: QuestState): Component {
         return if (quest.max > 0) {
-            Component.literal("${quest.description} (${quest.current}/${quest.max})")
+            Component.empty()
+                .append(quest.description)
+                .append(Component.literal(" (${quest.current}/${quest.max})"))
         } else {
-            Component.literal(quest.description)
+            quest.description
         }
     }
 
@@ -376,7 +378,7 @@ object QuestHudRenderer {
         requirement.threeGold?.let {
             quests.add(QuestState(
                 "gold_$nextLevel",
-                "Give 3 gold ingots to altar",
+                Component.translatable("witchery.quest.werewolf.give_gold"),
                 if (data.hasGivenGold()) 1 else 0,
                 1,
                 data.hasGivenGold()
@@ -386,7 +388,7 @@ object QuestHudRenderer {
         requirement.killedSheep?.let { max ->
             quests.add(QuestState(
                 "sheep_$nextLevel",
-                "Kill sheep",
+                Component.translatable("witchery.quest.werewolf.kill_sheep"),
                 data.getKilledSheep(),
                 max,
                 data.getKilledSheep() >= max
@@ -396,7 +398,7 @@ object QuestHudRenderer {
         requirement.offeredMutton?.let {
             quests.add(QuestState(
                 "mutton_$nextLevel",
-                "Offer 30 mutton to altar",
+                Component.translatable("witchery.quest.werewolf.mutton"),
                 if (data.hasOfferedMutton()) 1 else 0,
                 1,
                 data.hasOfferedMutton()
@@ -406,7 +408,7 @@ object QuestHudRenderer {
         requirement.killedWolves?.let { max ->
             quests.add(QuestState(
                 "wolves_$nextLevel",
-                "Kill wolves",
+                Component.translatable("witchery.quest.werewolf.wolves"),
                 data.getKilledWolves(),
                 max,
                 data.getKilledWolves() >= max
@@ -416,7 +418,7 @@ object QuestHudRenderer {
         requirement.offeredTongues?.let {
             quests.add(QuestState(
                 "tongues_$nextLevel",
-                "Offer 10 tongues to altar",
+                Component.translatable("witchery.quest.werewolf.tongues"),
                 if (data.hasOfferedTongue()) 1 else 0,
                 1,
                 data.hasOfferedTongue()
@@ -426,7 +428,7 @@ object QuestHudRenderer {
         requirement.killHornedOne?.let {
             quests.add(QuestState(
                 "horned_$nextLevel",
-                "Kill Horned Huntsman",
+                Component.translatable("witchery.quest.werewolf.huntsman"),
                 if (data.hasKilledHornedOne()) 1 else 0,
                 1,
                 data.hasKilledHornedOne()
@@ -436,7 +438,7 @@ object QuestHudRenderer {
         requirement.airSlayMonster?.let { max ->
             quests.add(QuestState(
                 "air_slay_$nextLevel",
-                "Kill monsters in air",
+                Component.translatable("witchery.quest.werewolf.air"),
                 data.getAirSlayMonster(),
                 max,
                 data.getAirSlayMonster() >= max
@@ -446,7 +448,7 @@ object QuestHudRenderer {
         requirement.nightHowl?.let { max ->
             quests.add(QuestState(
                 "howl_$nextLevel",
-                "Howl at night in different areas",
+                Component.translatable("witchery.quest.werewolf.howl"),
                 data.getNightHowl().size,
                 max,
                 data.getNightHowl().size >= max
@@ -456,7 +458,7 @@ object QuestHudRenderer {
         requirement.wolfPack?.let { max ->
             quests.add(QuestState(
                 "pack_$nextLevel",
-                "Form wolf pack",
+                Component.translatable("witchery.quest.werewolf.pack"),
                 data.getWolfPack(),
                 max,
                 data.getWolfPack() >= max
@@ -466,7 +468,7 @@ object QuestHudRenderer {
         requirement.pigmenKilled?.let { max ->
             quests.add(QuestState(
                 "pigmen_$nextLevel",
-                "Kill piglins",
+                Component.translatable("witchery.quest.werewolf.piglins"),
                 data.getPigmenKilled(),
                 max,
                 data.getPigmenKilled() >= max
@@ -476,7 +478,7 @@ object QuestHudRenderer {
         requirement.spreadLycanthropy?.let {
             quests.add(QuestState(
                 "spread_$nextLevel",
-                "Kill a Player or Villager",
+                Component.translatable("witchery.quest.werewolf.player"),
                 if (data.hasSpreadLycanthropy()) 1 else 0,
                 1,
                 data.hasSpreadLycanthropy()
@@ -500,7 +502,7 @@ object QuestHudRenderer {
             val bloodData = BloodPoolLivingEntityAttachment.getData(player)
             quests.add(QuestState(
                 "fill_up_$nextLevel",
-                "Fill your blood pool",
+                Component.translatable("witchery.quest.vampire.fill_blood"),
                 bloodData.bloodPool,
                 900,
                 bloodData.bloodPool >= 900
@@ -513,7 +515,7 @@ object QuestHudRenderer {
         requirement.halfVillagers?.let { max ->
             quests.add(QuestState(
                 "half_blood_$nextLevel",
-                "Suck half-blood of villagers",
+                Component.translatable("witchery.quest.vampire.half_blood"),
                 data.getVillagersHalfBlood().size,
                 max,
                 data.getVillagersHalfBlood().size >= max
@@ -523,7 +525,7 @@ object QuestHudRenderer {
         requirement.nightCounter?.let { max ->
             quests.add(QuestState(
                 "night_$nextLevel",
-                "Survive nights",
+                Component.translatable("witchery.quest.vampire.night"),
                 data.getNightTicker(),
                 max,
                 data.getNightTicker() >= max
@@ -533,7 +535,7 @@ object QuestHudRenderer {
         requirement.sunGrenades?.let { max ->
             quests.add(QuestState(
                 "grenades_$nextLevel",
-                "Use sun grenades",
+                Component.translatable("witchery.quest.vampire.grenades"),
                 data.getUsedSunGrenades(),
                 max,
                 data.getUsedSunGrenades() >= max
@@ -543,7 +545,7 @@ object QuestHudRenderer {
         requirement.blazesKilled?.let { max ->
             quests.add(QuestState(
                 "blazes_$nextLevel",
-                "Kill blazes",
+                Component.translatable("witchery.quest.vampire.blazes"),
                 data.getKilledBlazes(),
                 max,
                 data.getKilledBlazes() >= max
@@ -553,7 +555,7 @@ object QuestHudRenderer {
         requirement.villagesVisited?.let { max ->
             quests.add(QuestState(
                 "villages_$nextLevel",
-                "Visit villages as bat",
+                Component.translatable("witchery.quest.vampire.visit"),
                 data.getVisitedVillages().size,
                 max,
                 data.getVisitedVillages().size >= max
@@ -563,7 +565,7 @@ object QuestHudRenderer {
         requirement.trappedVillagers?.let { max ->
             quests.add(QuestState(
                 "trapped_$nextLevel",
-                "Trap villagers",
+                Component.translatable("witchery.quest.vampire.trap"),
                 data.getTrappedVillagers().size,
                 max,
                 data.getTrappedVillagers().size >= max
@@ -583,7 +585,7 @@ object QuestHudRenderer {
         requirement.boundSouls?.let { max ->
             quests.add(QuestState(
                 "souls_$nextLevel",
-                "Bind souls",
+                Component.translatable("witchery.quest.lich.bind_souls"),
                 data.getBoundSouls(),
                 max,
                 data.getBoundSouls() >= max
@@ -593,7 +595,7 @@ object QuestHudRenderer {
         requirement.zombieKilledMob?.let {
             quests.add(QuestState(
                 "zombie_kill_$nextLevel",
-                "Zombie slave kills mob",
+                Component.translatable("witchery.quest.lich.zombie_kill"),
                 if (data.hasZombieKilledMob()) 1 else 0,
                 1,
                 data.hasZombieKilledMob()
@@ -603,7 +605,7 @@ object QuestHudRenderer {
         requirement.killedGolems?.let { max ->
             quests.add(QuestState(
                 "golems_$nextLevel",
-                "Kill golems",
+                Component.translatable("witchery.quest.lich.golems"),
                 data.getKilledGolems(),
                 max,
                 data.getKilledGolems() >= max
@@ -613,7 +615,7 @@ object QuestHudRenderer {
         requirement.drainedAnimals?.let { max ->
             quests.add(QuestState(
                 "drained_$nextLevel",
-                "Drain animals",
+                Component.translatable("witchery.quest.lich.drain"),
                 data.getDrainedAnimals(),
                 max,
                 data.getDrainedAnimals() >= max
@@ -623,7 +625,7 @@ object QuestHudRenderer {
         requirement.possessedKillVillager?.let {
             quests.add(QuestState(
                 "possess_$nextLevel",
-                "Possess and kill villager",
+                Component.translatable("witchery.quest.lich.possess"),
                 if (data.hasPossessedKillVillager()) 1 else 0,
                 1,
                 data.hasPossessedKillVillager()
@@ -633,7 +635,7 @@ object QuestHudRenderer {
         requirement.killedWither?.let {
             quests.add(QuestState(
                 "wither_$nextLevel",
-                "Kill wither",
+                Component.translatable("witchery.quest.lich.wither"),
                 if (data.hasKilledWither()) 1 else 0,
                 1,
                 data.hasKilledWither()
@@ -643,7 +645,7 @@ object QuestHudRenderer {
         requirement.phylacteryDeaths?.let { max ->
             quests.add(QuestState(
                 "phylactery_$nextLevel",
-                "Die with phylactery",
+                Component.translatable("witchery.quest.lich.die"),
                 data.getPhylacteryDeaths(),
                 max,
                 data.getPhylacteryDeaths() >= max
