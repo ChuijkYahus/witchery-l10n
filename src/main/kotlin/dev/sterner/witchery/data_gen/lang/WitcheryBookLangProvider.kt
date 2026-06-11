@@ -1656,5 +1656,13 @@ object WitcheryBookLangProvider {
         add("tarot.brew_of_oblivion.title.1", "Brew of Oblivion")
         add("tarot.brew_of_oblivion.page.1", "Makes you forget which cards you drew.")
 
+        add("book.witchery.guidebook.general.altar.name", "Altar")
+        add("general.altar.title.1", "Altar")
+
+        add("general.altar.title.2", "Place 6 blocks in a 3x1x2 arrangement to create the Altar multiblock.")
+        add("general.altar", "")
+        add("general.altar.page.1", "The Altar is the source of Altar Power, which many contraptions and rituals require. As long as they are close to the Altar, they will be supplied with power. More nature around the Altar, such as trees and flowers, increases its Altar Power.")
+        add("book.witchery.guidebook.general.altar.description", "Source of Altar Power")
+        add("general.altar.modifiers.1", "Up to 6 modifiers can be placed on the Altar. Heads provide a multiplier and a flat boost. Lights provide a multiplier. The Chalice provides a flat boost. Range modifiers increase the range of Altar Power. Special modifiers, such as the Pentacle, double power, while the Infinity Egg maximizes power.")
     }
 }

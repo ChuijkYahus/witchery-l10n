@@ -24,7 +24,7 @@ import net.neoforged.neoforge.network.PacketDistributor
 @OnlyIn(Dist.CLIENT)
 class AbilitySelectionScreen(
     private val player: Player
-) : Screen(Component.literal("Select Abilities")) {
+) : Screen(Component.translatable("witchery.ability.select")) {
 
     private val ABILITIES_PER_ROW = 5
     private val SLOT_SIZE = 26
@@ -43,7 +43,7 @@ class AbilitySelectionScreen(
 
         addRenderableWidget(
             Button.builder(
-                Component.literal("Confirm"),
+                Component.translatable("witchery.ability.confirm"),
                 { button ->
                     saveAndClose()
                 }
@@ -56,7 +56,7 @@ class AbilitySelectionScreen(
 
         guiGraphics.drawCenteredString(
             font,
-            "Select 5 Active Abilities",
+            Component.translatable("witchery.ability.select_5"),
             width / 2,
             20,
             0xFFFFFF
@@ -65,7 +65,7 @@ class AbilitySelectionScreen(
         val selectedColor = if (selectedAbilities.size == MAX_SELECTED) 0x00FF00 else 0xFFFFFF
         guiGraphics.drawString(
             font,
-            "Selected: ${selectedAbilities.size}/$MAX_SELECTED",
+            Component.translatable("witchery.ability.selected").append("${selectedAbilities.size}/$MAX_SELECTED"),
             width / 2 - 40,
             35,
             selectedColor
@@ -166,7 +166,7 @@ class AbilitySelectionScreen(
 
         guiGraphics.drawCenteredString(
             font,
-            "Active Abilities",
+            Component.translatable("witchery.ability.active_abilities"),
             width / 2,
             barY - 15,
             0xFFFFFF
@@ -177,7 +177,7 @@ class AbilitySelectionScreen(
         val tooltip = mutableListOf<Component>()
 
         tooltip.add(
-            Component.literal(ability.id.replace('_', ' ').capitalize())
+            Component.translatable("witchery.ability." + ability.id)
                 .withStyle(ChatFormatting.YELLOW)
         )
 
@@ -199,17 +199,17 @@ class AbilitySelectionScreen(
         val isSelected = selectedAbilities.contains(ability.id)
         if (isSelected) {
             tooltip.add(
-                Component.literal("Selected")
+                Component.translatable("witchery.ability.selected_2")
                     .withStyle(ChatFormatting.GREEN)
             )
         } else if (selectedAbilities.size >= MAX_SELECTED) {
             tooltip.add(
-                Component.literal("Max abilities selected")
+                Component.translatable("witchery.ability.max_selected")
                     .withStyle(ChatFormatting.RED)
             )
         } else {
             tooltip.add(
-                Component.literal("Click to select")
+                Component.translatable("witchery.ability.click_select")
                     .withStyle(ChatFormatting.GREEN)
             )
         }

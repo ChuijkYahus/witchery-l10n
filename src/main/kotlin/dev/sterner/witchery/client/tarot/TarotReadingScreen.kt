@@ -16,7 +16,7 @@ import net.minecraft.util.Mth
 import net.minecraft.world.entity.player.Player
 import net.neoforged.neoforge.network.PacketDistributor
 
-class TarotReadingScreen : Screen(Component.literal("Tarot Reading")) {
+class TarotReadingScreen : Screen(Component.translatable("witchery.tarot_reading")) {
 
     private var player: Player? = null
     private val cards = mutableListOf<TarotCardObject>()
@@ -216,7 +216,7 @@ class TarotReadingScreen : Screen(Component.literal("Tarot Reading")) {
         }
 
         if (!hasDrawn && !isDrawing) {
-            val text = Component.literal("Draw to seal your fate")
+            val text = Component.translatable("witchery.tarot_reading.draw")
                 .withStyle(ChatFormatting.GOLD, ChatFormatting.ITALIC)
 
             val textWidth = minecraft!!.font.width(text)
@@ -320,11 +320,23 @@ class TarotReadingScreen : Screen(Component.literal("Tarot Reading")) {
         tooltip.add(Component.literal(""))
 
         if (card.isReversed) {
-            tooltip.add(Component.literal("Reversed Card").withStyle(ChatFormatting.RED, ChatFormatting.ITALIC))
-            tooltip.add(Component.literal("Negative Effect").withStyle(ChatFormatting.DARK_RED))
+            tooltip.add(
+                Component.translatable("witchery.tarot_card.reversed")
+                    .withStyle(ChatFormatting.RED, ChatFormatting.ITALIC)
+            )
+            tooltip.add(
+                Component.translatable("witchery.tarot_card.negative")
+                    .withStyle(ChatFormatting.DARK_RED)
+            )
         } else {
-            tooltip.add(Component.literal("Upright Card").withStyle(ChatFormatting.GREEN, ChatFormatting.ITALIC))
-            tooltip.add(Component.literal("Positive Effect").withStyle(ChatFormatting.DARK_GREEN))
+            tooltip.add(
+                Component.translatable("witchery.tarot_card.upright")
+                    .withStyle(ChatFormatting.GREEN, ChatFormatting.ITALIC)
+            )
+            tooltip.add(
+                Component.translatable("witchery.tarot_card.positive")
+                    .withStyle(ChatFormatting.DARK_GREEN)
+            )
         }
 
         val tarotEffect = WitcheryTarotEffects.getByCardNumber(card.cardNumber)
@@ -332,7 +344,7 @@ class TarotReadingScreen : Screen(Component.literal("Tarot Reading")) {
             val effectText = tarotEffect.getDescription(card.isReversed).string
 
             tooltip.add(Component.literal(""))
-            tooltip.add(Component.literal("Effect:").withStyle(ChatFormatting.GRAY))
+            tooltip.add(Component.translatable("witchery.tarot_reading.effect").withStyle(ChatFormatting.GRAY))
 
             val maxWidth = 200
             val words = effectText.split(" ")

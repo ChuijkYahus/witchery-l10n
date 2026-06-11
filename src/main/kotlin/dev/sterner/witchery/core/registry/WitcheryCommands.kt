@@ -54,6 +54,8 @@ import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.npc.Villager
 import net.neoforged.neoforge.registries.DeferredRegister
 import java.util.function.Supplier
+import kotlin.compareTo
+import kotlin.text.toInt
 
 
 object WitcheryCommands {
@@ -113,7 +115,7 @@ object WitcheryCommands {
 
                                 if (entity !is Villager) {
                                     ctx.source.sendFailure(
-                                        Component.literal("Target must be a villager")
+                                        Component.translatable("witchery.command.error.not_villager")
                                     )
                                     return@executes 0
                                 }
@@ -121,7 +123,10 @@ object WitcheryCommands {
                                 VillagerWerewolfHandler.infectVillager(entity, null)
 
                                 ctx.source.sendSuccess(
-                                    { Component.literal("Infected villager ${entity.name.string}. Transformation in 20 seconds.") },
+                                    { Component.translatable(
+                                        "witchery.command.villagerwerewolf.infected",
+                                        entity.name.string
+                                    ) },
                                     true
                                 )
                                 1
@@ -137,7 +142,7 @@ object WitcheryCommands {
 
                                 if (entity !is Villager) {
                                     ctx.source.sendFailure(
-                                        Component.literal("Target must be a villager")
+                                        Component.translatable("witchery.command.error.not_villager")
                                     )
                                     return@executes 0
                                 }
@@ -149,7 +154,10 @@ object WitcheryCommands {
                                 )
 
                                 ctx.source.sendSuccess(
-                                    { Component.literal("Cured villager ${entity.name.string} of lycanthropy.") },
+                                    {  Component.translatable(
+                                        "witchery.command.villagerwerewolf.cured",
+                                        entity.name.string
+                                    ) },
                                     true
                                 )
                                 1
@@ -165,32 +173,85 @@ object WitcheryCommands {
 
                                 if (entity !is Villager) {
                                     ctx.source.sendFailure(
-                                        Component.literal("Target must be a villager")
+                                        Component.translatable("witchery.command.error.not_villager")
                                     )
                                     return@executes 0
                                 }
 
                                 val data = VillagerDataAttachment.getData(entity)
 
-                                val status = buildString {
-                                    appendLine("§6=== Werewolf Status for ${entity.name.string} ===")
-                                    appendLine("§7Infected: §f${if (data.infectedTicks > 0) "Yes" else "No"}")
-                                    appendLine("§7Infection Progress: §f${data.infectedTicks}/400 ticks")
-                                    appendLine("§7Is Werewolf: §f${if (data.isWerewolf) "Yes" else "No"}")
-
-                                    if (data.isWerewolf) {
-                                        val shouldTransform = VillagerWerewolfHandler.shouldTransformToWerewolf(entity)
-                                        appendLine("§7Should Transform Now: §f${if (shouldTransform) "Yes (Full Moon)" else "No"}")
-                                    }
-
-                                    appendLine("§7Moon Phase: §f${entity.level().moonPhase}")
-                                    appendLine("§7Is Day: §f${entity.level().isDay}")
-                                }
-
                                 ctx.source.sendSuccess(
-                                    { Component.literal(status) },
+                                    {
+                                        Component.translatable(
+                                            "witchery.command.villagerwerewolf.status.header",
+                                            entity.name.string
+                                        )
+                                    },
                                     false
                                 )
+                                ctx.source.sendSuccess(
+                                    {
+                                        Component.translatable(
+                                            "witchery.command.villagerwerewolf.status.infected",
+                                            Component.translatable(if (data.infectedTicks > 0) "witchery.command.yes" else "witchery.command.no")
+                                        )
+                                    },
+                                    false
+                                )
+                                ctx.source.sendSuccess(
+                                    {
+                                        Component.translatable(
+                                            "witchery.command.villagerwerewolf.status.progress",
+                                            data.infectedTicks
+                                        )
+                                    },
+                                    false
+                                )
+                                ctx.source.sendSuccess(
+                                    {
+                                        Component.translatable(
+                                            "witchery.command.villagerwerewolf.status.is_werewolf",
+                                            Component.translatable(if (data.isWerewolf) "witchery.command.yes" else "witchery.command.no")
+                                        )
+                                    },
+                                    false
+                                )
+
+                                if (data.isWerewolf) {
+                                    val shouldTransform = VillagerWerewolfHandler.shouldTransformToWerewolf(entity)
+                                    ctx.source.sendSuccess(
+                                        {
+                                            Component.translatable(
+                                                "witchery.command.villagerwerewolf.status.should_transform",
+                                                Component.translatable(if (shouldTransform) "witchery.command.yes" else "witchery.command.no")
+                                            )
+                                        },
+                                        false
+                                    )
+                                }
+
+                                val moonPhase = entity.level().moonPhase
+                                ctx.source.sendSuccess(
+                                    {
+                                        Component.translatable(
+                                            "witchery.command.villagerwerewolf.status.moon_phase",
+                                            moonPhase
+                                        )
+                                    },
+                                    false
+                                )
+
+                                val isDay = entity.level().isDay
+                                ctx.source.sendSuccess(
+                                    {
+                                        Component.translatable(
+                                            "witchery.command.villagerwerewolf.status.is_day",
+                                            Component.translatable(if (isDay) "witchery.command.yes" else "witchery.command.no")
+                                        )
+                                    },
+                                    false
+                                )
+
                                 1
                             }
                     )
@@ -222,7 +283,11 @@ object WitcheryCommands {
                                 }
 
                                 ctx.source.sendSuccess(
-                                    { Component.literal("Infected $infected villagers within $radius blocks.") },
+                                    { Component.translatable(
+                                        "witchery.command.villagerwerewolf.infect_all",
+                                        infected,
+                                        radius
+                                    ) },
                                     true
                                 )
                                 1
@@ -285,7 +350,11 @@ object WitcheryCommands {
                                 val player = EntityArgument.getPlayer(ctx, "player")
                                 val currentInfusion = InfusionPlayerAttachment.getData(player)
                                 ctx.source.sendSuccess(
-                                    { Component.literal("Current infusion type: ${currentInfusion.type.serializedName} for player ${player.name.string}") },
+                                    { Component.translatable(
+                                        "witchery.command.infusion.get",
+                                        currentInfusion.type.serializedName,
+                                        player.name.string
+                                    ) },
                                     false
                                 )
                                 1
@@ -358,7 +427,11 @@ object WitcheryCommands {
                                 val player = EntityArgument.getPlayer(ctx, "player")
                                 val status = ManifestationPlayerAttachment.getData(player).hasRiteOfManifestation
                                 ctx.source.sendSuccess(
-                                    { Component.literal("Current manifestation status: $status for player ${player.name.string}") },
+                                    {   Component.translatable(
+                                        "witchery.command.manifestation.get",
+                                        status,
+                                        player.name.string
+                                    ) },
                                     false
                                 )
                                 1
@@ -449,13 +522,17 @@ object WitcheryCommands {
                                 val curseData = CursePlayerAttachment.getData(player).playerCurseList
 
                                 val message = if (curseData.isEmpty()) {
-                                    Component.literal("No curses on ${player.name.string}")
+                                    Component.translatable("witchery.command.curse.none", player.name.string)
                                 } else {
                                     val curseNames = curseData.joinToString(", ") { curse ->
                                         WitcheryCurseRegistry.CURSES_REGISTRY[curse.curseId]?.javaClass?.simpleName
                                             ?: curse.curseId.toString()
                                     }
-                                    Component.literal("Curses on ${player.name.string}: $curseNames")
+                                    Component.translatable(
+                                        "witchery.command.curse.list",
+                                        player.name.string,
+                                        curseNames
+                                    )
                                 }
 
                                 ctx.source.sendSuccess({ message }, false)
@@ -717,7 +794,11 @@ object WitcheryCommands {
                                                 )
 
                                                 context.source.sendSuccess(
-                                                    { Component.literal("Set blood level to $level for ${player.name.string}") },
+                                                    { Component.translatable(
+                                                        "witchery.command.vampire.blood.set",
+                                                        level,
+                                                        player.name.string
+                                                    ) },
                                                     true
                                                 )
                                                 1
@@ -734,7 +815,11 @@ object WitcheryCommands {
                                         val player = EntityArgument.getPlayer(context, "player")
 
                                         val data = BloodPoolLivingEntityAttachment.getData(player)
-                                        player.sendSystemMessage(Component.literal("Blood Level: " + data.bloodPool + "/" + data.maxBlood))
+                                        player.sendSystemMessage(Component.translatable(
+                                            "witchery.command.vampire.blood.get",
+                                            data.bloodPool,
+                                            data.maxBlood
+                                        ))
                                         1
                                     })
                     )
@@ -820,33 +905,46 @@ object WitcheryCommands {
                                 val data = CovenPlayerAttachment.getData(player)
 
                                 ctx.source.sendSuccess(
-                                    { Component.literal("=== Coven Info for ${player.name.string} ===") },
+                                    { Component.translatable(
+                                        "witchery.command.coven.info.header",
+                                        player.name.string
+                                    ) },
                                     false
                                 )
 
                                 val witchCount = data.covenWitches.size
                                 val activeWitches = data.covenWitches.count { it.isActive }
                                 ctx.source.sendSuccess(
-                                    { Component.literal("Coven Witches: $activeWitches/$witchCount active") },
+                                    { Component.translatable(
+                                        "witchery.command.coven.info.witches",
+                                        activeWitches,
+                                        witchCount
+                                    ) },
                                     false
                                 )
 
                                 if (data.playerMembers.isNotEmpty()) {
                                     ctx.source.sendSuccess(
-                                        { Component.literal("Player Members (${data.playerMembers.size}):") },
+                                        {  Component.translatable(
+                                            "witchery.command.coven.info.members_header",
+                                            data.playerMembers.size
+                                        ) },
                                         false
                                     )
                                     data.playerMembers.forEach { memberUuid ->
                                         val member = ctx.source.server.playerList.getPlayer(memberUuid)
                                         val memberName = member?.name?.string ?: "Offline Player"
                                         ctx.source.sendSuccess(
-                                            { Component.literal("  - $memberName") },
+                                            { Component.translatable(
+                                                "witchery.command.coven.info.member",
+                                                memberName
+                                            ) },
                                             false
                                         )
                                     }
                                 } else {
                                     ctx.source.sendSuccess(
-                                        { Component.literal("No player members") },
+                                        { Component.translatable("witchery.command.coven.info.no_player_members") },
                                         false
                                     )
                                 }
@@ -865,19 +963,34 @@ object WitcheryCommands {
 
                                 if (data.covenWitches.isEmpty()) {
                                     ctx.source.sendSuccess(
-                                        { Component.literal("${player.name.string} has no coven witches") },
+                                        { Component.translatable(
+                                            "witchery.command.coven.witches.none",
+                                            player.name.string
+                                        ) },
                                         false
                                     )
                                 } else {
                                     ctx.source.sendSuccess(
-                                        { Component.literal("=== Coven Witches for ${player.name.string} ===") },
+                                        { Component.translatable(
+                                            "witchery.command.coven.witches.header",
+                                            player.name.string
+                                        ) },
                                         false
                                     )
                                     data.covenWitches.forEachIndexed { index, witch ->
-                                        val status = if (witch.isActive) "Active" else "Dead"
-                                        val health = if (witch.isActive) "${witch.health.toInt()} HP" else "0 HP"
+                                        val statusComp =
+                                            Component.translatable(if (witch.isActive) "witchery.command.active" else "witchery.command.dead")
+                                        val healthInt = if (witch.isActive) witch.health.toInt() else 0
                                         ctx.source.sendSuccess(
-                                            { Component.literal("[$index] ${witch.name.string} - $status ($health)") },
+                                            {
+                                                Component.translatable(
+                                                    "witchery.command.coven.witches.entry",
+                                                    index,
+                                                    witch.name,
+                                                    statusComp,
+                                                    healthInt
+                                                )
+                                            },
                                             false
                                         )
                                     }
@@ -896,20 +1009,33 @@ object WitcheryCommands {
 
                                 if (data.playerMembers.isEmpty()) {
                                     ctx.source.sendSuccess(
-                                        { Component.literal("${player.name.string} has no player members in their coven") },
+                                        { Component.translatable(
+                                            "witchery.command.coven.members.none",
+                                            player.name.string
+                                        ) },
                                         false
                                     )
                                 } else {
                                     ctx.source.sendSuccess(
-                                        { Component.literal("=== Player Members for ${player.name.string} ===") },
+                                        { Component.translatable(
+                                            "witchery.command.coven.members.header",
+                                            player.name.string
+                                        ) },
                                         false
                                     )
                                     data.playerMembers.forEach { memberUuid ->
                                         val member = ctx.source.server.playerList.getPlayer(memberUuid)
                                         val memberName = member?.name?.string ?: "Offline"
-                                        val status = if (member != null) "Online" else "Offline"
+                                        val statusComp =
+                                            Component.translatable(if (member != null) "witchery.command.online" else "witchery.command.offline")
                                         ctx.source.sendSuccess(
-                                            { Component.literal("  - $memberName ($status)") },
+                                            {
+                                                Component.translatable(
+                                                    "witchery.command.coven.members.entry",
+                                                    memberName,
+                                                    statusComp
+                                                )
+                                            },
                                             false
                                         )
                                     }
@@ -955,12 +1081,19 @@ object WitcheryCommands {
 
                                         if (CovenHandler.removePlayerFromCoven(leader, member.uuid)) {
                                             ctx.source.sendSuccess(
-                                                { Component.literal("Removed ${member.name.string} from ${leader.name.string}'s coven") },
+                                                { Component.translatable(
+                                                    "witchery.command.coven.remove_player.success",
+                                                    member.name.string,
+                                                    leader.name.string
+                                                ) },
                                                 true
                                             )
                                         } else {
                                             ctx.source.sendFailure(
-                                                Component.literal("Failed to remove ${member.name.string} from coven")
+                                                Component.translatable(
+                                                    "witchery.command.coven.remove_player.failure",
+                                                    member.name.string
+                                                )
                                             )
                                         }
                                         1
@@ -980,12 +1113,16 @@ object WitcheryCommands {
 
                                         if (CovenHandler.resurrectWitch(player, index)) {
                                             ctx.source.sendSuccess(
-                                                { Component.literal("Resurrected witch at index $index for ${player.name.string}") },
+                                                { Component.translatable(
+                                                    "witchery.command.coven.resurrect.success",
+                                                    index,
+                                                    player.name.string
+                                                ) },
                                                 true
                                             )
                                         } else {
                                             ctx.source.sendFailure(
-                                                Component.literal("Failed to resurrect witch (invalid index or witch is already alive)")
+                                                Component.translatable("witchery.command.coven.resurrect.failure")
                                             )
                                         }
                                         1
@@ -1010,7 +1147,7 @@ object WitcheryCommands {
                                 }
 
                                 ctx.source.sendSuccess(
-                                    { Component.literal("Cleared all coven members for ${player.name.string}") },
+                                    { Component.translatable("witchery.command.coven.clear", player.name.string) },
                                     true
                                 )
                                 1
@@ -1131,7 +1268,7 @@ object WitcheryCommands {
         duration: Int
     ): Int {
         if (target !is LivingEntity) {
-            ctx.source.sendFailure(Component.literal("Target must be a living entity"))
+            ctx.source.sendFailure(Component.translatable("witchery.command.error.not_living"))
             return 0
         }
 
@@ -1141,9 +1278,7 @@ object WitcheryCommands {
         val seconds = (duration % 1200) / 20
 
         ctx.source.sendSuccess(
-            {
-                Component.literal("Petrified ${target.name.string} for ${minutes}m ${seconds}s")
-            },
+            { Component.translatable("witchery.command.petrification.apply", target.name.string, minutes, seconds) },
             true
         )
 
@@ -1155,16 +1290,14 @@ object WitcheryCommands {
         target: net.minecraft.world.entity.Entity
     ): Int {
         if (target !is LivingEntity) {
-            ctx.source.sendFailure(Component.literal("Target must be a living entity"))
+            ctx.source.sendFailure(Component.translatable("witchery.command.error.not_living"))
             return 0
         }
 
         PetrificationHandler.unpetrify(target)
 
         ctx.source.sendSuccess(
-            {
-                Component.literal("Removed petrification from ${target.name.string}")
-            },
+            { Component.translatable("witchery.command.petrification.remove", target.name.string) },
             true
         )
 
@@ -1176,7 +1309,7 @@ object WitcheryCommands {
         target: net.minecraft.world.entity.Entity
     ): Int {
         if (target !is LivingEntity) {
-            ctx.source.sendFailure(Component.literal("Target must be a living entity"))
+            ctx.source.sendFailure(Component.translatable("witchery.command.error.not_living"))
             return 0
         }
 
@@ -1184,9 +1317,7 @@ object WitcheryCommands {
 
         if (!data.isPetrified()) {
             ctx.source.sendSuccess(
-                {
-                    Component.literal("${target.name.string} is not petrified")
-                },
+                { Component.translatable("witchery.command.petrification.not_petrified", target.name.string) },
                 false
             )
             return 0
@@ -1197,13 +1328,10 @@ object WitcheryCommands {
         val seconds = (ticksRemaining % 1200) / 20
 
         ctx.source.sendSuccess(
-            {
-                Component.literal(
-                    "${target.name.string} is petrified with ${minutes}m ${seconds}s remaining"
-                )
-            },
+            { Component.translatable("witchery.command.petrification.status", target.name.string, minutes, seconds) },
             false
         )
+
 
         return 1
     }
